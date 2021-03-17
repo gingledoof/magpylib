@@ -23,7 +23,7 @@ _name = "magpylib-cuda"
 _description = "Free Python3 package to compute magnetic fields."
 _author_email = "magpylib@gmail.com"
 _author = "Michael Ortner"
-_projectUrl = "https://github.com/magpylib/magpylib"
+_projectUrl = "https://github.com/gingledoof/magpylib"
 _release = "beta"
 _license='GNU Affero General Public License v3 or later (AGPLv3+) (AGPL-3.0-or-later)'
 
