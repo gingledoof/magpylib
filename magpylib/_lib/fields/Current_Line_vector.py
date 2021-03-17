@@ -41,7 +41,9 @@ from numpy.linalg import norm
 # here we only use vectorized code as this function will primarily be
 #   used to call on multiple line segments. The vectorized code was
 #   developed based on the depreciated version below.
+from numba import cuda
 
+@cuda.jit
 def Bfield_LineSegmentV(p0, p1, p2, I0):
     ''' private
     base function determines the fields of given line segments
@@ -105,7 +107,7 @@ def Bfield_LineSegmentV(p0, p1, p2, I0):
     return fields
 
 
-
+@cuda.jit
 def Bfield_CurrentLineV(VERT,i0,poso):
     ''' private
     determine total field from a multi-segment line current
@@ -117,11 +119,11 @@ def Bfield_CurrentLineV(VERT,i0,poso):
     P2 = VERT[1:]
     I0 = np.ones((N))*i0
 
-    Bv = Bfield_LineSegmentV(P0,P1,P2,I0)
+    Bv = Bfield_LineSegmentV[1,1](P0,P1,P2,I0)
 
     return np.sum(Bv,axis=0)
 
-
+@cuda.jit
 def Bfield_CurrentLineVV(VERT,i0,POS):
     ''' private
     determine total field from a multi-segment line current for multiple positions
@@ -138,7 +140,7 @@ def Bfield_CurrentLineVV(VERT,i0,POS):
 
     I0 = np.ones(N*M)*i0
 
-    Bv = Bfield_LineSegmentV(P0,P1,P2,I0)
+    Bv = Bfield_LineSegmentV[1,1](P0,P1,P2,I0)
     Bv = Bv.reshape((M,N,3))
     Bv = np.sum(Bv,axis=1)
     return Bv

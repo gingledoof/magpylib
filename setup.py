@@ -19,7 +19,7 @@
 _magPyVersion = "2.3.0-beta"
 
 _SphinxVersion = "1.8.2"
-_name = "magpylib"
+_name = "magpylib-cuda"
 _description = "Free Python3 package to compute magnetic fields."
 _author_email = "magpylib@gmail.com"
 _author = "Michael Ortner"

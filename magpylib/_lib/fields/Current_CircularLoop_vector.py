@@ -37,7 +37,9 @@ import numpy as np
 # posCL: arr3  [mm]     Position of the center of the current loop
 
 # VECTORIZATION
+from numba import cuda
 
+@cuda.jit
 def Bfield_CircularCurrentLoopV(I0, D, POS):
 
     R = D/2  #radius
@@ -73,7 +75,7 @@ def Bfield_CircularCurrentLoopV(I0, D, POS):
     Bcy = np.array([field_R,np.zeros(N),field_Z]).T
     AX = np.zeros([N,3])
     AX[:,2] = 1
-    Bkart = angleAxisRotationV_priv(PHI/pi*180,AX,Bcy)
+    Bkart = angleAxisRotationV_priv[1,1](PHI/pi*180,AX,Bcy)
 
     return (Bkart.T * I0).T * 1000 # to mT
 

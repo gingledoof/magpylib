@@ -23,7 +23,9 @@
 # -------------------------------------------------------------------------------
 
 import numpy as np
+from numba import cuda
 
+@cuda.jit
 def QmultV(Q, P):
     """
     Implementation of the quaternion multiplication
@@ -41,7 +43,7 @@ def QconjV(Q):
     Sig = np.array([1,-1,-1,-1])
     return Q*Sig
 
-
+@cuda.jit
 def getRotQuatV(ANGLE, AXIS):
     """
     ANGLE in [deg], AXIS dimensionless
@@ -90,10 +92,10 @@ def getAngAxV(Q):
     Uax[mask] = axis[mask]/Lax[mask,None]   # use mask to normalize non-zeros
     return angle,Uax
 
-
+@cuda.jit
 def angleAxisRotationV_priv(ANGLE, AXIS, V):
     # vectorized version of angleAxisRotation_priv
-    P = getRotQuatV(ANGLE, AXIS)
+    P = getRotQuatV[1,1](ANGLE, AXIS)
     Qv = np.pad(V,((0,0),(1,0)), mode='constant') 
     Qv_new = QmultV(P, QmultV(Qv, QconjV(P)))
     return Qv_new[:,1:]
